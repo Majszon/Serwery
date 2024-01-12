@@ -9,6 +9,8 @@ class Product:
 
     def __init__(self, name: str, price: float):
         self.name = name
+        if self.is_name_correct == False:
+            raise ValueError("Nieprawidłowa nazwa produktu")
         self.price = price
 
     def __eq__(self, other):
@@ -20,13 +22,10 @@ class Product:
         return hash((self.name, self.price))
 
     @property
-    def is_name_correct(self):
-        a, b = self.counter()
-        if a < 2 and b < 1:
-            return ValueError
-        else:
-            return True
-    
+    def is_name_correct(self) -> bool:
+        letter, init = self.counter()
+        return letter >= 1 and init >= 1
+  
     def counter(self):
         letter_count = 0
         digit_count = 0
@@ -38,11 +37,12 @@ class Product:
                 digit_count += 1
         return letter_count, digit_count
 
- 
-class TooManyProductsFoundError:
+class ServerError(Exception):
+    pass
+
+class TooManyProductsFoundError(ServerError):
     # Reprezentuje wyjątek związany ze znalezieniem zbyt dużej liczby produktów.
     pass
- 
  
 # FIXME: Każada z poniższych klas serwerów powinna posiadać:
 #   (1) metodę inicjalizacyjną przyjmującą listę obiektów typu `Product` i ustawiającą atrybut `products` zgodnie z typem reprezentacji produktów na danym serwerze,
