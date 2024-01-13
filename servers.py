@@ -3,7 +3,8 @@
 # -*- coding: utf-8 -*-
  
 from typing import Optional
- 
+from abc import ABC, abstractmethod
+import re
 
 class Product:
 
@@ -49,14 +50,43 @@ class TooManyProductsFoundError(ServerError):
 #   (2) możliwość odwołania się do atrybutu klasowego `n_max_returned_entries` (typu int) wyrażający maksymalną dopuszczalną liczbę wyników wyszukiwania,
 #   (3) możliwość odwołania się do metody `get_entries(self, n_letters)` zwracającą listę produktów spełniających kryterium wyszukiwania
  
-class ListServer:
-    pass
- 
- 
-class MapServer:
-    pass
- 
- 
+class Server(ABC):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    n_max_returned_entries: int = 3
+
+    @abstractmethod
+    def _get_all_products(self, n_letters: int = 1):
+        raise NotImplementedError
+    
+    def get_entries(self, n_letters: int = 1):
+        string = '^[a-zA-Z]{{{n_letters}}}\\d{{2,3}}$'.format(n_letters=n_letters)
+        products = [elem for elem in self._get_all_products(n_letters) if re.match(string, elem.name)]
+        if len(products) > Server.n_max_returned_entries:
+            raise TooManyProductsFoundError
+        return sorted(products, key = lambda x: x.price)
+
+
+class ListServer(Server):
+
+    def __init__(self, products, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.__products = products
+    
+    def _get_all_products(self, n_letters: int = 1):
+        return self.__products
+
+class MapServer(Server):
+
+    def __init__(self, products, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.__products = {elem.name: elem for elem in products}
+    
+    def _get_all_products(self, n_letters: int = 1):
+        return list(self.__products.values())
+    
 class Client:
     # FIXME: klasa powinna posiadać metodę inicjalizacyjną przyjmującą obiekt reprezentujący serwer
  
