@@ -4,6 +4,7 @@
  
 from typing import Optional
 from abc import ABC, abstractmethod
+from typing import TypeVar
 import re
 
 class Product:
@@ -67,7 +68,7 @@ class Server(ABC):
         if len(products) > Server.n_max_returned_entries:
             raise TooManyProductsFoundError
         return sorted(products, key = lambda x: x.price)
-
+ServerType = TypeVar('ServerType', bound=Server)
 
 class ListServer(Server):
 
@@ -90,6 +91,20 @@ class MapServer(Server):
 class Client:
     # FIXME: klasa powinna posiadać metodę inicjalizacyjną przyjmującą obiekt reprezentujący serwer
  
+    def __init__(self, server: ServerType) -> None:
+        self.server: ServerType = server
+        pass
+ 
     def get_total_price(self, n_letters: Optional[int]) -> Optional[float]:
-        raise NotImplementedError()
+        try:
+            if n_letters is  None:
+                entries = self.server.get_entries()
+            else:
+                entries = self.server.get_entries(n_letters)
+            if not entries:
+                return None
+            else:
+                return sum([entry.price for entry in entries])
+        except TooManyProductsFoundError:
+            return None
     # 1: Bugajski (414889), Adamek (414896), Basiura (414817)
