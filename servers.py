@@ -5,6 +5,7 @@
 from typing import Optional
 from abc import ABC, abstractmethod
 from typing import TypeVar
+from typing import TypeVar
 import re
 
 class Product:
@@ -68,7 +69,6 @@ class Server(ABC):
         if len(products) > Server.n_max_returned_entries:
             raise TooManyProductsFoundError
         return sorted(products, key = lambda x: x.price)
-
 ServerType = TypeVar('ServerType', bound=Server)
 
 class ListServer(Server):
@@ -96,7 +96,26 @@ class Client:
         self.server: ServerType = server
         pass
  
+    def __init__(self, server: ServerType) -> None:
+        self.server: ServerType = server
+        pass
+ 
+    def __init__(self, server: ServerType) -> None:
+        self.server: ServerType = server
+        pass
+ 
     def get_total_price(self, n_letters: Optional[int]) -> Optional[float]:
+        try:
+            if n_letters is  None:
+                entries = self.server.get_entries()
+            else:
+                entries = self.server.get_entries(n_letters)
+            if not entries:
+                return None
+            else:
+                return sum([entry.price for entry in entries])
+        except TooManyProductsFoundError:
+            return None
         try:
             if n_letters is  None:
                 entries = self.server.get_entries()
