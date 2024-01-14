@@ -5,7 +5,6 @@
 from typing import Optional
 from abc import ABC, abstractmethod
 from typing import TypeVar
-from typing import TypeVar
 import re
 
 class Product:
@@ -92,14 +91,6 @@ class MapServer(Server):
 class Client:
     # FIXME: klasa powinna posiadać metodę inicjalizacyjną przyjmującą obiekt reprezentujący serwer
 
-    def __init__(self, server: ServerType) -> None:
-        self.server: ServerType = server
-        pass
- 
-    def __init__(self, server: ServerType) -> None:
-        self.server: ServerType = server
-        pass
- 
     def __init__(self, server: ServerType) -> None:
         self.server: ServerType = server
         pass
