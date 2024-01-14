@@ -25,7 +25,18 @@ class ClientTest(unittest.TestCase):
             client = Client(server)
             self.assertEqual(5, client.get_total_price(2))
  
- 
+class TestProduct(unittest.TestCase):
+
+    def test_valid_product_name(self):
+        # Sprawdzanie poprawności nazwy produktu
+        product = Product("b1", 25.0)
+        self.assertTrue(product.is_name_correct)
+
+    def test_invalid_product_name(self):
+        # Sprawdzanie niepoprawnej nazwy produktu
+        with self.assertRaises(ValueError):
+            Product("123", 25.0)
+            
 if __name__ == '__main__':
     unittest.main()
 # 1: Bugajski (414889), Adamek (414896), Basiura (414817)
