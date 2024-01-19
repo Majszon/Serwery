@@ -10,9 +10,9 @@ import re
 class Product:
 
     def __init__(self, name: str, price: float):
-        self.name = name
-        if self.is_name_correct == False:
+        if not self.is_name_correct(name):
             raise ValueError("Nieprawidłowa nazwa produktu")
+        self.name = name
         self.price = price
 
     def __eq__(self, other):
@@ -23,21 +23,9 @@ class Product:
     def __hash__(self):
         return hash((self.name, self.price))
 
-    @property
-    def is_name_correct(self) -> bool:
-        letter, init = self.counter()
-        return letter >= 1 and init >= 1
-  
-    def counter(self):
-        letter_count = 0
-        digit_count = 0
-
-        for char in self.name:
-            if char.isalpha():
-                letter_count += 1
-            elif char.isdigit():
-                digit_count += 1
-        return letter_count, digit_count
+    @staticmethod
+    def is_name_correct(name: str) -> bool:
+        return re.fullmatch('^[a-zA-Z]+\\d+$', name)
 
 class ServerError(Exception):
     pass
