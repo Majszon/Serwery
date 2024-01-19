@@ -62,19 +62,19 @@ class ListServer(Server):
 
     def __init__(self, products, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.__products = products
+        self.products = products
     
     def _get_all_products(self, n_letters: int = 1):
-        return self.__products
+        return self.products
 
 class MapServer(Server):
 
     def __init__(self, products, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.__products = {elem.name: elem for elem in products}
+        self.products = {elem.name: elem for elem in products}
     
     def _get_all_products(self, n_letters: int = 1):
-        return list(self.__products.values())
+        return list(self.products.values())
     
 class Client:
     # FIXME: klasa powinna posiadać metodę inicjalizacyjną przyjmującą obiekt reprezentujący serwer
