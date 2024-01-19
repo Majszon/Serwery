@@ -95,15 +95,4 @@ class Client:
                 return sum([entry.price for entry in entries])
         except TooManyProductsFoundError:
             return None
-        try:
-            if n_letters is  None:
-                entries = self.server.get_entries()
-            else:
-                entries = self.server.get_entries(n_letters)
-            if not entries:
-                return None
-            else:
-                return sum([entry.price for entry in entries])
-        except TooManyProductsFoundError:
-            return None
     # 1: Bugajski (414889), Adamek (414896), Basiura (414817)
