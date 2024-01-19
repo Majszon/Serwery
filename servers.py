@@ -52,7 +52,7 @@ class Server(ABC):
     
     def get_entries(self, n_letters: int = 1):
         string = '^[a-zA-Z]{{{n_letters}}}\\d{{2,3}}$'.format(n_letters=n_letters)
-        products = [elem for elem in self._get_all_products(n_letters) if re.match(string, elem.name)]
+        products = [elem for elem in self._get_all_products(n_letters) if re.fullmatch(string, elem.name)]
         if len(products) > Server.n_max_returned_entries:
             raise TooManyProductsFoundError
         return sorted(products, key = lambda x: x.price)
